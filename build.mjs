@@ -18,6 +18,10 @@ const GSC_TOKEN = process.env.GSC_TOKEN || ''; // Google Search Console meta-tag
 const BING_TOKEN = process.env.BING_TOKEN || ''; // Bing Webmaster Tools meta-tag verification content
 const OUT = 'dist';
 const FILL = (n, what) => `<aside class="fill"><strong>[FILL FROM SESSION ${n}]</strong> ${what}</aside>`;
+// Social profiles: footer links and JSON-LD sameAs. To add one later (e.g. Xiaohongshu once claimed), add one line: ['小红书', 'https://...'].
+const SOCIALS = [
+  ['YouTube', 'https://www.youtube.com/@babaships'],
+];
 const T = {
   en: { lang: 'en', site: 'babaships', author: 'Baba · babaships', home: 'Home', about: 'About', lessons: 'Lessons', privacy: 'Privacy', switch: '中文', foot: 'A parent-run project. No child photos, names, school or exact location are published.' },
   zh: { lang: 'zh-Hans', site: '澳爸在造', author: '澳爸 · 澳爸在造', home: '首页', about: '关于', lessons: '课程', privacy: '隐私', switch: 'English', foot: '家长自办项目。不公开孩子的照片、姓名、学校或具体位置。' },
@@ -110,7 +114,8 @@ for (const p of pages) {
   const title = [...`${p.title} | ${t.site}`].length <= 60 ? `${p.title} | ${t.site}` : p.title; // brand suffix only while the title stays within 60 characters
   const crumbs = [[t.home, p.lang === 'en' ? '/' : '/zh/'], ...(p.crumbs || [])];
   const ld = [{ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: crumbs.map(([n, h], i) => ({ '@type': 'ListItem', position: i + 1, name: n, item: url(h) })) }];
-  if (p.article) ld.push({ '@context': 'https://schema.org', '@type': 'Article', headline: p.h1, description: p.desc, datePublished: d, dateModified: d, inLanguage: t.lang, author: { '@type': 'Person', name: t.author, url: url(p.lang === 'en' ? '/about/' : '/zh/about/') }, mainEntityOfPage: url(p.path), image: url('/assets/icon-512.png') });
+  if (p.path === '/' || p.path === '/zh/') ld.push({ '@context': 'https://schema.org', '@type': 'Organization', name: 'babaships', alternateName: '澳爸在造', url: url('/'), logo: url('/assets/icon-512.png'), sameAs: SOCIALS.map(([, u]) => u) });
+  if (p.article) ld.push({ '@context': 'https://schema.org', '@type': 'Article', headline: p.h1, description: p.desc, datePublished: d, dateModified: d, inLanguage: t.lang, author: { '@type': 'Person', name: t.author, sameAs: SOCIALS.map(([, u]) => u), url: url(p.lang === 'en' ? '/about/' : '/zh/about/') }, mainEntityOfPage: url(p.path), image: url('/assets/icon-512.png') });
   const alts = p.alt ? [[p.lang === 'en' ? 'en' : 'zh-Hans', p.path], [p.lang === 'en' ? 'zh-Hans' : 'en', p.alt]] : [[t.lang, p.path]];
   const hreflang = p.alt ? [...alts, ['x-default', p.lang === 'en' ? p.path : p.alt]].map(([l, h]) => `<link rel="alternate" hreflang="${l}" href="${url(h)}">`).join('\n') : '';
   const home = p.lang === 'en' ? '/' : '/zh/';
@@ -130,7 +135,7 @@ ${ANALYTICS ? `<script data-goatcounter="https://${GOATCOUNTER}.goatcounter.com/
 <p class="lead">${p.lead}</p>
 ${p.crumbs ? `<p class="crumbs">${crumbs.map(([n, h], i) => i < crumbs.length - 1 ? `<a href="${BASE}${h}">${n}</a>` : n).join(' › ')}</p>` : ''}
 ${p.article ? `<p class="byline">${t.lang === 'en' ? 'By' : '作者：'} ${t.author}. ${t.lang === 'en' ? 'Updated' : '更新于'} ${d}.</p>` : ''}
-${p.body}</main><footer><p>${t.foot}</p><p><a href="${BASE}${home}privacy/">${t.privacy}</a></p></footer></body></html>`;
+${p.body}</main><footer><p>${t.foot}</p><p><a href="${BASE}${home}privacy/">${t.privacy}</a>${SOCIALS.map(([n, u]) => ` · <a href="${u}" rel="me noopener">${n}</a>`).join('')}</p></footer></body></html>`;
   const file = join(OUT, p.path, 'index.html');
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(file, html);
