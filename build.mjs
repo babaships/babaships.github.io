@@ -51,19 +51,19 @@ ${qa.map(([h, f]) => `<h2>${h}</h2>${FILL(n, f)}`).join('')}
 const pages = [
   { path: '/', lang: 'en', alt: '/zh/', title: 'Vibe coding for kids: a 10-year-old builds a planner app', desc: 'A parent documents how his 10-year-old builds a holiday planner app with AI, one lesson at a time. Free files and a course waitlist.', h1: 'Vibe coding for kids: she talks, AI builds, we learn',
     lead: 'My 10-year-old builds her own holiday planner app with AI. I film each lesson and share the free files here.',
-    body: `<p>I keep her prompts word for word. This site is for parents who want their kids to build, not just watch. No faces, no names, no school, nothing finer than "Australia".</p>
+    body: `<p>I keep her prompts word for word. This site is for parents who want their kids to build, not just watch. No real faces or photos of my daughter, no names, no school, nothing finer than "Australia".</p>
 <ul><li><a href="${BASE}/lessons/">Read the lessons</a></li><li><a href="${BASE}/about/">Who writes this</a></li></ul>${waitlist('en')}` },
   { path: '/about/', lang: 'en', alt: '/zh/about/', title: 'About: a developer dad and a kid-built planner app', desc: 'Who writes this site, why we build, and what we never publish about our child.', h1: 'About',
     lead: 'I am a software developer in Australia with 11 years at AWS. This site is my side project with my daughter.',
     crumbs: [['About', '/about/']],
     body: `<h2>Why did we start?</h2>${FILL(0, 'Two or three true sentences: why you started, what she wanted the planner to do. No names.')}
-<h2>What do we never publish?</h2><p>Her face, full name, school, or any location finer than "Australia". See <a href="${BASE}/privacy/">Privacy</a>.</p>` },
+<h2>What do we never publish?</h2><p>Her real face or any photo of her, her full name, school, or any location finer than "Australia". See <a href="${BASE}/privacy/">Privacy</a>.</p>` },
   { path: '/privacy/', lang: 'en', alt: '/zh/privacy/', title: 'Privacy: what this site collects and what we keep off it', desc: 'No cookies. How visits are counted, how the waitlist email is used, and what we never publish about our child.', h1: 'Privacy',
     lead: ANALYTICS ? 'This site sets no cookies. It loads one small visit counter, GoatCounter, which uses no cookies.' : 'This site sets no cookies and loads no third-party scripts.',
     crumbs: [['Privacy', '/privacy/']],
     body: `${ANALYTICS ? `<h2>How are visits counted?</h2><p><a href="https://www.goatcounter.com/">GoatCounter</a> counts page views without cookies and without unique identifiers. It keeps the page, the site you came from, browser, screen size and rough location.</p>` : ''}
 <h2>What happens to a waitlist email?</h2><p>Your email is used only to tell you about the course and free files. <em>TODO: name the form provider and how to unsubscribe.</em></p>
-<h2>What do we keep off the site?</h2><p>No face, full name, school or exact location is published. Demo data only in screen recordings.</p>
+<h2>What do we keep off the site?</h2><p>No real face or photo of my daughter, no full name, school or exact location is published. Demo data only in screen recordings.</p>
 <h2>How do I contact you?</h2><p>TODO: contact email.</p>` },
   { path: '/lessons/', lang: 'en', alt: '/zh/lessons/', title: 'Lessons: building a kid\'s planner app with AI', desc: 'Index of lessons from a 10-year-old\'s holiday planner build, with free files and prompts.', h1: 'Lessons',
     lead: 'Each lesson is one real session, with her prompts and the files we used.',
@@ -89,14 +89,14 @@ const pages = [
       ['What is the difference between a vague and a CAPY prompt?', 'Real before and after from prompts/s1.md and s2.md.'], ['Where do I get the card?', 'Link the printable file and put its real file name here.'], ['What went wrong?', 'Did, Wanted, Got from a real moment.']]) },
   { path: '/zh/', lang: 'zh', alt: '/', title: '孩子也能做App：10岁女儿用AI做假期计划', desc: '一位爸爸记录10岁女儿用AI一节课一节课做出假期计划App。免费文件和课程候补名单。', h1: '让孩子用AI做自己的App',
     lead: '我的10岁女儿正在用AI做自己的假期计划App。每节课我都录下来，免费文件放在这里。',
-    body: `<p>提示词一字不改。这个网站给希望孩子动手创造的家长。不露脸，不写姓名、学校，位置只到“澳洲”。</p>
+    body: `<p>提示词一字不改。这个网站给希望孩子动手创造的家长。不露真脸，不放女儿照片，不写姓名、学校，位置只到“澳洲”。</p>
 <ul><li><a href="${BASE}/zh/lessons/">看课程</a></li><li><a href="${BASE}/zh/about/">关于作者</a></li></ul>${waitlist('zh')}` },
   { path: '/zh/about/', lang: 'zh', alt: '/about/', title: '关于：程序员爸爸和孩子做的计划App', desc: '谁在写这个网站，为什么做，以及我们永远不公开的孩子信息。', h1: '关于', crumbs: [['关于', '/zh/about/']],
     lead: '我是澳洲的软件开发者，在AWS工作11年。这是我和女儿的业余项目。',
-    body: `<h2>我们为什么开始做？</h2>${FILL(0, '两三句真实的话：为什么开始，她想让计划App做什么。不写名字。')}<h2>我们不公开什么？</h2><p>她的脸、全名、学校、比“澳洲”更细的位置。见<a href="${BASE}/zh/privacy/">隐私</a>。</p>` },
+    body: `<h2>我们为什么开始做？</h2>${FILL(0, '两三句真实的话：为什么开始，她想让计划App做什么。不写名字。')}<h2>我们不公开什么？</h2><p>她的真实面孔和照片、全名、学校、比“澳洲”更细的位置。见<a href="${BASE}/zh/privacy/">隐私</a>。</p>` },
   { path: '/zh/privacy/', lang: 'zh', alt: '/privacy/', title: '隐私：本站收集什么，不公开什么', desc: '本站不设Cookie。访问怎么统计，候补名单邮箱的用途。', h1: '隐私', crumbs: [['隐私', '/zh/privacy/']],
     lead: ANALYTICS ? '本站不设Cookie，只加载一个不用Cookie的访问计数脚本（GoatCounter）。' : '本站不设Cookie，不加载第三方脚本。',
-    body: `${ANALYTICS ? `<h2>访问怎么统计？</h2><p><a href="https://www.goatcounter.com/">GoatCounter</a>不用Cookie，也不给访客编号。它记录页面、来源网站、浏览器、屏幕大小和大致位置。</p>` : ''}<h2>候补名单的邮箱怎么用？</h2><p>邮箱只用于通知课程和免费文件。<em>TODO：写明表单服务商和退订方式。</em></p><h2>我们的孩子呢？</h2><p>不公开脸、全名、学校或具体位置。屏幕录像只用演示数据。</p>` },
+    body: `${ANALYTICS ? `<h2>访问怎么统计？</h2><p><a href="https://www.goatcounter.com/">GoatCounter</a>不用Cookie，也不给访客编号。它记录页面、来源网站、浏览器、屏幕大小和大致位置。</p>` : ''}<h2>候补名单的邮箱怎么用？</h2><p>邮箱只用于通知课程和免费文件。<em>TODO：写明表单服务商和退订方式。</em></p><h2>我们的孩子呢？</h2><p>不公开她的真脸和照片、全名、学校或具体位置。屏幕录像只用演示数据。</p>` },
   { path: '/zh/lessons/', lang: 'zh', alt: '/lessons/', title: '课程：用AI做孩子的计划App', desc: '10岁女儿做假期计划App的课程索引，附免费文件和提示词。', h1: '课程', crumbs: [['课程', '/zh/lessons/']],
     lead: '每节课都是一次真实的练习。完整内容目前是英文，中文页会陆续补上。',
     body: `<ul><li><a href="${BASE}/lessons/can-a-kid-create-an-app/">孩子能自己做App吗？（英文）</a></li></ul>${waitlist('zh')}` },
@@ -145,7 +145,7 @@ ${p.body}</main><footer><p>${t.foot}</p><p><a href="${BASE}${home}privacy/">${t.
 
 copyFileSync('src/style.css', join(OUT, 'style.css'));
 mkdirSync(join(OUT, 'assets'), { recursive: true });
-for (const f of ['logo-96.png', 'favicon-32.png', 'favicon-48.png', 'apple-touch-icon.png', 'icon-512.png', 'og-image.png']) copyFileSync(join('assets', f), join(OUT, 'assets', f)); // logo-source.webp stays in the repo only
+for (const f of ['logo-96.png', 'favicon-32.png', 'favicon-48.png', 'apple-touch-icon.png', 'icon-512.png', 'og-image.png']) copyFileSync(join('assets', f), join(OUT, 'assets', f)); // logo-source.png stays in the repo only
 copyFileSync('assets/favicon.ico', join(OUT, 'favicon.ico'));
 writeFileSync(join(OUT, '.nojekyll'), '');
 writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${url('/sitemap.xml')}\n`);
