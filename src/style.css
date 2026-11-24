@@ -1,0 +1,11 @@
+:root{--fg:#222;--bg:#fffdf8;--ac:#8a5a2b;--mut:#6b6358}
+*{box-sizing:border-box}body{margin:0;font:18px/1.6 system-ui,-apple-system,"PingFang SC","Noto Sans SC",sans-serif;color:var(--fg);background:var(--bg)}
+a{color:var(--ac)}header,main,footer{max-width:42rem;margin:0 auto;padding:1rem}
+header{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;border-bottom:1px solid #e8e0d2}
+header .brand{font-weight:700;text-decoration:none;display:flex;gap:.4rem;align-items:center}header img{width:28px;height:28px}
+nav{display:flex;gap:1rem;flex-wrap:wrap;margin-left:auto}h1{line-height:1.2}
+.crumbs{font-size:.85rem;color:var(--mut)}.fill{border:2px dashed #c0392b;background:#fff1ef;padding:.6rem .9rem;margin:1rem 0;border-radius:6px;font-size:.95rem}
+.fill strong{color:#c0392b}.box{background:#f6efe2;padding:1rem;border-radius:8px;margin:1.5rem 0}
+form label{display:block;margin:.6rem 0 .2rem}input,select,button{font:inherit;padding:.4rem .6rem;max-width:100%}button{cursor:pointer}
+footer{color:var(--mut);font-size:.85rem;border-top:1px solid #e8e0d2;margin-top:2rem}
+nav a,footer a{display:inline-block;padding:.6rem .4rem}li{margin:.5rem 0}li a{display:inline-block;padding:.3rem 0}
