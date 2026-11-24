@@ -5,12 +5,11 @@ import { dirname, join } from 'node:path';
 // One variable drives everything: SITE_URL may be a domain root (org site, default) or include a sub-path (project site).
 // Root:     SITE_URL=https://<org>.github.io/            -> BASE=''
 // Sub-path: SITE_URL=https://<user>.github.io/<repo>/    -> BASE='/<repo>'
-const U = new URL(process.env.SITE_URL || 'https://TODO-ORG.github.io/'); // TODO: replace TODO-ORG with the GitHub organization name
+const U = new URL(process.env.SITE_URL || 'https://babaships.github.io/'); // org root site: repo must be named babaships.github.io
 const SITE_URL = U.origin;
 const BASE = U.pathname.replace(/\/$/, '');
-if (process.env.CI && /127\.0\.0\.1|localhost|todo-org/i.test(SITE_URL)) throw new Error(`SITE_URL is a placeholder in CI: ${SITE_URL}`);
-const SITE_NAME = 'Capy Planner'; // TODO: confirm brand name
-const AUTHOR = 'TODO-AUTHOR'; // TODO: a name or handle you are happy to show; never the child's
+if (process.env.CI && /127\.0\.0\.1|localhost|todo/i.test(SITE_URL)) throw new Error(`SITE_URL is a placeholder in CI: ${SITE_URL}`);
+// Brand and byline per language. Handles only; never a real name.
 const DATE = '2026-11-24'; // default for pages without their own `date`; TODO: set per article when published
 // Analytics: GoatCounter, cookie-free. Set the code (the "x" in x.goatcounter.com) here or in the GOATCOUNTER env var.
 const GOATCOUNTER = process.env.GOATCOUNTER || 'TODO-GOATCOUNTER'; // TODO: GoatCounter site code
@@ -20,8 +19,8 @@ const BING_TOKEN = process.env.BING_TOKEN || ''; // Bing Webmaster Tools meta-ta
 const OUT = 'dist';
 const FILL = (n, what) => `<aside class="fill"><strong>[FILL FROM SESSION ${n}]</strong> ${what}</aside>`;
 const T = {
-  en: { lang: 'en', home: 'Home', about: 'About', lessons: 'Lessons', privacy: 'Privacy', switch: '中文', foot: 'A parent-run project. No child photos, names, school or exact location are published.' },
-  zh: { lang: 'zh-Hans', home: '首页', about: '关于', lessons: '课程', privacy: '隐私', switch: 'English', foot: '家长自办项目。不公开孩子的照片、姓名、学校或具体位置。' },
+  en: { lang: 'en', site: 'babaships', author: 'Baba · babaships', home: 'Home', about: 'About', lessons: 'Lessons', privacy: 'Privacy', switch: '中文', foot: 'A parent-run project. No child photos, names, school or exact location are published.' },
+  zh: { lang: 'zh-Hans', site: '澳爸在造', author: '澳爸 · 澳爸在造', home: '首页', about: '关于', lessons: '课程', privacy: '隐私', switch: 'English', foot: '家长自办项目。不公开孩子的照片、姓名、学校或具体位置。' },
 };
 const waitlist = (l) => l === 'en' ? `<section id="waitlist" class="box"><h2>Course waitlist</h2>
 <p>Free files come first. Join the list to hear when the full course opens. Email only, no spam.</p>
@@ -108,28 +107,29 @@ for (const p of pages) {
   const draft = p.body.includes('[FILL FROM'); // pages with unfilled blocks stay out of search
   const noindex = draft;
   const d = p.date || DATE;
+  const title = [...`${p.title} | ${t.site}`].length <= 60 ? `${p.title} | ${t.site}` : p.title; // brand suffix only while the title stays within 60 characters
   const crumbs = [[t.home, p.lang === 'en' ? '/' : '/zh/'], ...(p.crumbs || [])];
   const ld = [{ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: crumbs.map(([n, h], i) => ({ '@type': 'ListItem', position: i + 1, name: n, item: url(h) })) }];
-  if (p.article) ld.push({ '@context': 'https://schema.org', '@type': 'Article', headline: p.h1, description: p.desc, datePublished: d, dateModified: d, inLanguage: t.lang, author: { '@type': 'Person', name: AUTHOR, url: url('/about/') }, mainEntityOfPage: url(p.path), image: url('/assets/icon-512.png') });
+  if (p.article) ld.push({ '@context': 'https://schema.org', '@type': 'Article', headline: p.h1, description: p.desc, datePublished: d, dateModified: d, inLanguage: t.lang, author: { '@type': 'Person', name: t.author, url: url(p.lang === 'en' ? '/about/' : '/zh/about/') }, mainEntityOfPage: url(p.path), image: url('/assets/icon-512.png') });
   const alts = p.alt ? [[p.lang === 'en' ? 'en' : 'zh-Hans', p.path], [p.lang === 'en' ? 'zh-Hans' : 'en', p.alt]] : [[t.lang, p.path]];
   const hreflang = p.alt ? [...alts, ['x-default', p.lang === 'en' ? p.path : p.alt]].map(([l, h]) => `<link rel="alternate" hreflang="${l}" href="${url(h)}">`).join('\n') : '';
   const home = p.lang === 'en' ? '/' : '/zh/';
   const html = `<!doctype html>
 <html lang="${t.lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${esc(p.title)}</title><meta name="description" content="${esc(p.desc)}">
+<title>${esc(title)}</title><meta name="description" content="${esc(p.desc)}">
 <link rel="canonical" href="${url(p.path)}">${noindex ? '\n<meta name="robots" content="noindex,follow">' : ''}
 ${hreflang}
-<meta property="og:type" content="${p.article ? 'article' : 'website'}"><meta property="og:title" content="${esc(p.title)}"><meta property="og:description" content="${esc(p.desc)}"><meta property="og:url" content="${url(p.path)}"><meta property="og:site_name" content="${SITE_NAME}"><meta property="og:locale" content="${p.lang === 'en' ? 'en_AU' : 'zh_CN'}"><meta property="og:image" content="${url('/assets/icon-512.png')}">
+<meta property="og:type" content="${p.article ? 'article' : 'website'}"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(p.desc)}"><meta property="og:url" content="${url(p.path)}"><meta property="og:site_name" content="${t.site}"><meta property="og:locale" content="${p.lang === 'en' ? 'en_AU' : 'zh_CN'}"><meta property="og:image" content="${url('/assets/icon-512.png')}">
 <meta name="twitter:card" content="summary">${GSC_TOKEN ? `\n<meta name="google-site-verification" content="${esc(GSC_TOKEN)}">` : ''}${BING_TOKEN ? `\n<meta name="msvalidate.01" content="${esc(BING_TOKEN)}">` : ''}
 <link rel="icon" type="image/svg+xml" href="${BASE}/assets/capy.svg"><link rel="icon" type="image/png" sizes="192x192" href="${BASE}/assets/icon-192.png"><link rel="apple-touch-icon" href="${BASE}/assets/icon-180.png">
 <link rel="stylesheet" href="${BASE}/style.css">
 ${ld.map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script>`).join('\n')}
-${ANALYTICS ? `<script data-goatcounter="https://${GOATCOUNTER}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>\n` : ''}</head><body><header><a class="brand" href="${BASE}${home}"><img src="${BASE}/assets/capy.svg" alt="" width="28" height="28">${SITE_NAME}</a>
+${ANALYTICS ? `<script data-goatcounter="https://${GOATCOUNTER}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>\n` : ''}</head><body><header><a class="brand" href="${BASE}${home}"><img src="${BASE}/assets/capy.svg" alt="" width="28" height="28">${t.site}</a>
 <nav><a href="${BASE}${home}">${t.home}</a><a href="${BASE}${home}lessons/">${t.lessons}</a><a href="${BASE}${home}about/">${t.about}</a>${p.alt ? `<a href="${BASE}${p.alt}" hreflang="${p.lang === 'en' ? 'zh-Hans' : 'en'}" lang="${p.lang === 'en' ? 'zh-Hans' : 'en'}">${t.switch}</a>` : ''}</nav></header>
 <main><h1>${p.h1}</h1>
 <p class="lead">${p.lead}</p>
 ${p.crumbs ? `<p class="crumbs">${crumbs.map(([n, h], i) => i < crumbs.length - 1 ? `<a href="${BASE}${h}">${n}</a>` : n).join(' › ')}</p>` : ''}
-${p.article ? `<p class="byline">By ${AUTHOR}. Updated ${d}.</p>` : ''}
+${p.article ? `<p class="byline">${t.lang === 'en' ? 'By' : '作者：'} ${t.author}. ${t.lang === 'en' ? 'Updated' : '更新于'} ${d}.</p>` : ''}
 ${p.body}</main><footer><p>${t.foot}</p><p><a href="${BASE}${home}privacy/">${t.privacy}</a></p></footer></body></html>`;
   const file = join(OUT, p.path, 'index.html');
   mkdirSync(dirname(file), { recursive: true });
