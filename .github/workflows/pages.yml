@@ -24,10 +24,14 @@ jobs:
           package-manager-cache: false
       - id: pages
         uses: actions/configure-pages@v6
-      # base_url = https://lambertbin.github.io/kids-ai-build now; follows a rename or custom domain automatically
+      # base_url = https://<org>.github.io for an org root site (or .../<repo> for a project site, or a custom domain).
+      # Optional repo variables (Settings > Secrets and variables > Actions > Variables): GOATCOUNTER, GSC_TOKEN, BING_TOKEN.
       - run: node build.mjs
         env:
           SITE_URL: ${{ steps.pages.outputs.base_url }}/
+          GOATCOUNTER: ${{ vars.GOATCOUNTER }}
+          GSC_TOKEN: ${{ vars.GSC_TOKEN }}
+          BING_TOKEN: ${{ vars.BING_TOKEN }}
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist

@@ -1,5 +1,7 @@
 // Crawl from sitemap + all internal links; verify 200s, asset links, sitemap XML, JSON-LD parses.
-// Usage: BASE=/kids-ai-build SITE=https://lambertbin.github.io node check.mjs   (server on 127.0.0.1:8080 serving dist under BASE)
+// Usage: SITE=https://<org>.github.io node check.mjs                          (root: server on 127.0.0.1:8080 serves dist/)
+//        BASE=/<repo> SITE=https://<user>.github.io node check.mjs             (sub-path: server serves a folder holding <repo> -> dist)
+// Lint: one <h1>; <title> <= 60 chars; the first thing after </h1> is <p class="lead"> of <= 150 chars (breadcrumb comes after it).
 const O='http://127.0.0.1:8080';const BASE=(process.env.BASE||'').replace(/\/$/,'');
 const SITE=(process.env.SITE||'').replace(/\/$/,'');const seen=new Set();const bad=[];
 const q=['/','/sitemap.xml','/robots.txt','/favicon.ico','/about/','/zh/about/','/zh/privacy/','/zh/lessons/'].map(u=>BASE+u);
@@ -18,5 +20,9 @@ while(q.length){const u=q.pop();if(seen.has(u))continue;seen.add(u);
  if(SITE)for(const m of t.matchAll(/(?:href|content)="(https?:\/\/[^"]+)"/g))if(m[1].startsWith('http://127.0.0.1')||m[1].startsWith('http://localhost'))bad.push(u+' local url '+m[1]);
  if(SITE)for(const m of t.matchAll(/rel="(?:canonical|alternate)"[^>]*href="([^"]+)"/g))if(!m[1].startsWith(SITE+BASE+'/'))bad.push(u+' bad canonical/hreflang '+m[1]);
  for(const m of t.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/g)){try{JSON.parse(m[1])}catch{bad.push('jsonld '+u)}}
+ if((t.match(/<h1>/g)||[]).length!==1)bad.push(u+' needs exactly one <h1>');
+ const title=(t.match(/<title>(.*?)<\/title>/s)||[])[1];if(title&&[...title.replace(/&amp;|&quot;|&lt;/g,'x')].length>60)bad.push(u+' title over 60: '+title);
+ const lead=(t.match(/<\/h1>\s*<p class="lead">(.*?)<\/p>/s)||[])[1];
+ if(lead===undefined)bad.push(u+' no <p class="lead"> right after <h1>');else if([...lead.replace(/<[^>]+>/g,'').replace(/&amp;|&quot;|&lt;/g,'x')].length>150)bad.push(u+' lead over 150 chars');
  for(const k of ['<title>','rel="canonical"','og:title','name="description"','<h1>'])if(!t.includes(k))bad.push(u+' missing '+k)}
 console.log('checked',seen.size,'urls; problems:',bad.length?bad:'none')

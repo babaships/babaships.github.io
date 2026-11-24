@@ -9,3 +9,5 @@ nav{display:flex;gap:1rem;flex-wrap:wrap;margin-left:auto}h1{line-height:1.2}
 form label{display:block;margin:.6rem 0 .2rem}input,select,button{font:inherit;padding:.4rem .6rem;max-width:100%}button{cursor:pointer}
 footer{color:var(--mut);font-size:.85rem;border-top:1px solid #e8e0d2;margin-top:2rem}
 nav a,footer a{display:inline-block;padding:.6rem .4rem}li{margin:.5rem 0}li a{display:inline-block;padding:.3rem 0}
+.lead{font-size:1.15rem}.byline{font-size:.85rem;color:var(--mut)}
+table.nums{border-collapse:collapse;width:100%;margin:1rem 0}.nums th,.nums td{border:1px solid #e8e0d2;padding:.4rem .6rem;text-align:left}
