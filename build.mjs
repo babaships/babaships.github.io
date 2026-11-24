@@ -116,7 +116,7 @@ for (const p of pages) {
   const crumbs = [[t.home, p.lang === 'en' ? '/' : '/zh/'], ...(p.crumbs || [])];
   const ld = [{ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: crumbs.map(([n, h], i) => ({ '@type': 'ListItem', position: i + 1, name: n, item: url(h) })) }];
   if (p.path === '/' || p.path === '/zh/') ld.push({ '@context': 'https://schema.org', '@type': 'Organization', name: 'babaships', alternateName: '澳爸在造', url: url('/'), logo: url('/assets/icon-512.png'), sameAs: SOCIALS.map((x) => x.url) });
-  if (p.article) ld.push({ '@context': 'https://schema.org', '@type': 'Article', headline: p.h1, description: p.desc, datePublished: d, dateModified: d, inLanguage: t.lang, author: { '@type': 'Person', name: t.author, sameAs: SOCIALS.map((x) => x.url), url: url(p.lang === 'en' ? '/about/' : '/zh/about/') }, mainEntityOfPage: url(p.path), image: url('/assets/icon-512.png') });
+  if (p.article) ld.push({ '@context': 'https://schema.org', '@type': 'Article', headline: p.h1, description: p.desc, datePublished: d, dateModified: d, inLanguage: t.lang, author: { '@type': 'Person', name: t.author, sameAs: SOCIALS.map((x) => x.url), url: url(p.lang === 'en' ? '/about/' : '/zh/about/') }, mainEntityOfPage: url(p.path), image: url('/assets/og-image.png') });
   const alts = p.alt ? [[p.lang === 'en' ? 'en' : 'zh-Hans', p.path], [p.lang === 'en' ? 'zh-Hans' : 'en', p.alt]] : [[t.lang, p.path]];
   const hreflang = p.alt ? [...alts, ['x-default', p.lang === 'en' ? p.path : p.alt]].map(([l, h]) => `<link rel="alternate" hreflang="${l}" href="${url(h)}">`).join('\n') : '';
   const home = p.lang === 'en' ? '/' : '/zh/';
@@ -125,12 +125,12 @@ for (const p of pages) {
 <title>${esc(title)}</title><meta name="description" content="${esc(p.desc)}">
 <link rel="canonical" href="${url(p.path)}">${noindex ? '\n<meta name="robots" content="noindex,follow">' : ''}
 ${hreflang}
-<meta property="og:type" content="${p.article ? 'article' : 'website'}"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(p.desc)}"><meta property="og:url" content="${url(p.path)}"><meta property="og:site_name" content="${t.site}"><meta property="og:locale" content="${p.lang === 'en' ? 'en_AU' : 'zh_CN'}"><meta property="og:image" content="${url('/assets/icon-512.png')}">
-<meta name="twitter:card" content="summary">${GSC_TOKEN ? `\n<meta name="google-site-verification" content="${esc(GSC_TOKEN)}">` : ''}${BING_TOKEN ? `\n<meta name="msvalidate.01" content="${esc(BING_TOKEN)}">` : ''}
-<link rel="icon" type="image/svg+xml" href="${BASE}/assets/capy.svg"><link rel="icon" type="image/png" sizes="192x192" href="${BASE}/assets/icon-192.png"><link rel="apple-touch-icon" href="${BASE}/assets/icon-180.png">
+<meta property="og:type" content="${p.article ? 'article' : 'website'}"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(p.desc)}"><meta property="og:url" content="${url(p.path)}"><meta property="og:site_name" content="${t.site}"><meta property="og:locale" content="${p.lang === 'en' ? 'en_AU' : 'zh_CN'}"><meta property="og:image" content="${url('/assets/og-image.png')}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="babaships · 澳爸在造: a hand-drawn crayon portrait">
+<meta name="twitter:card" content="summary_large_image">${GSC_TOKEN ? `\n<meta name="google-site-verification" content="${esc(GSC_TOKEN)}">` : ''}${BING_TOKEN ? `\n<meta name="msvalidate.01" content="${esc(BING_TOKEN)}">` : ''}
+<link rel="icon" href="${BASE}/favicon.ico" sizes="32x32 48x48"><link rel="icon" type="image/png" sizes="32x32" href="${BASE}/assets/favicon-32.png"><link rel="icon" type="image/png" sizes="48x48" href="${BASE}/assets/favicon-48.png"><link rel="apple-touch-icon" href="${BASE}/assets/apple-touch-icon.png">
 <link rel="stylesheet" href="${BASE}/style.css">
 ${ld.map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script>`).join('\n')}
-${ANALYTICS ? `<script data-goatcounter="https://${GOATCOUNTER}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>\n` : ''}</head><body><header><a class="brand" href="${BASE}${home}"><img src="${BASE}/assets/capy.svg" alt="" width="28" height="28">${t.site}</a>
+${ANALYTICS ? `<script data-goatcounter="https://${GOATCOUNTER}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>\n` : ''}</head><body><header><a class="brand" href="${BASE}${home}"><img src="${BASE}/assets/logo-96.png" alt="" width="28" height="28">${t.site}</a>
 <nav><a href="${BASE}${home}">${t.home}</a><a href="${BASE}${home}lessons/">${t.lessons}</a><a href="${BASE}${home}about/">${t.about}</a>${p.alt ? `<a href="${BASE}${p.alt}" hreflang="${p.lang === 'en' ? 'zh-Hans' : 'en'}" lang="${p.lang === 'en' ? 'zh-Hans' : 'en'}">${t.switch}</a>` : ''}</nav></header>
 <main><h1>${p.h1}</h1>
 <p class="lead">${p.lead}</p>
@@ -145,8 +145,8 @@ ${p.body}</main><footer><p>${t.foot}</p><p><a href="${BASE}${home}privacy/">${t.
 
 copyFileSync('src/style.css', join(OUT, 'style.css'));
 mkdirSync(join(OUT, 'assets'), { recursive: true });
-for (const f of ['capy.svg', 'icon-180.png', 'icon-192.png', 'icon-512.png']) copyFileSync(join('assets', f), join(OUT, 'assets', f));
-writeFileSync(join(OUT, 'favicon.ico'), readFileSync('assets/icon-192.png')); // shortcut: PNG bytes served as .ico; browsers accept it, replace with a real .ico if needed
+for (const f of ['logo-96.png', 'favicon-32.png', 'favicon-48.png', 'apple-touch-icon.png', 'icon-512.png', 'og-image.png']) copyFileSync(join('assets', f), join(OUT, 'assets', f)); // logo-source.webp stays in the repo only
+copyFileSync('assets/favicon.ico', join(OUT, 'favicon.ico'));
 writeFileSync(join(OUT, '.nojekyll'), '');
 writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${url('/sitemap.xml')}\n`);
 const alt = (p) => (p.alt ? `\n<xhtml:link rel="alternate" hreflang="${p.lang === 'en' ? 'en' : 'zh-Hans'}" href="${url(p.path)}"/>\n<xhtml:link rel="alternate" hreflang="${p.lang === 'en' ? 'zh-Hans' : 'en'}" href="${url(p.alt)}"/>` : '');
