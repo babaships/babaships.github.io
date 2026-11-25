@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- ===== PLUMBING START: keep everything between START and END exactly as it is ===== -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Capy Planner</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Capy">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#b3804f">
+<meta name="robots" content="noindex">
+<!-- ===== PLUMBING END ===== -->
+<style>
+  /* Session 1 starts here. Everything below is hers to change. */
+  body { margin: 0; font-family: system-ui, sans-serif; background: #f6ead0; color: #4a2e18; }
+  main { max-width: 640px; margin: 0 auto; padding: 24px 16px; text-align: center; }
+  h1 { margin: 8px 0; }
+</style>
+</head>
+<body>
+<main id="app">
+  <h1>Hello Capy</h1>
+  <p>My holiday planner starts here.</p>
+</main>
+
+<!-- ===== PLUMBING START: offline support. Keep as is. ===== -->
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js", { scope: "./" }).catch(function () {});
+}
+</script>
+<!-- ===== PLUMBING END ===== -->
+</body>
+</html>

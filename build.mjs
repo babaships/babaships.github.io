@@ -1,5 +1,5 @@
 // Zero-dependency static builder. Usage: SITE_URL=https://user.github.io/repo/ node build.mjs
-import { mkdirSync, writeFileSync, copyFileSync, readFileSync, rmSync } from 'node:fs';
+import { mkdirSync, writeFileSync, copyFileSync, cpSync, readFileSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
 // One variable drives everything: SITE_URL may be a domain root (org site, default) or include a sub-path (project site).
@@ -147,8 +147,10 @@ copyFileSync('src/style.css', join(OUT, 'style.css'));
 mkdirSync(join(OUT, 'assets'), { recursive: true });
 for (const f of ['logo-96.png', 'favicon-32.png', 'favicon-48.png', 'apple-touch-icon.png', 'icon-512.png', 'og-image.png']) copyFileSync(join('assets', f), join(OUT, 'assets', f)); // logo-source.png stays in the repo only
 copyFileSync('assets/favicon.ico', join(OUT, 'favicon.ico'));
+// The daughter's holiday planner app: plain files, copied as they are. Not a content page: no template, header, sitemap entry or JSON-LD.
+cpSync('planner', join(OUT, 'planner'), { recursive: true });
 writeFileSync(join(OUT, '.nojekyll'), '');
-writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${url('/sitemap.xml')}\n`);
+writeFileSync(join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: ${BASE}/planner/\n\nSitemap: ${url('/sitemap.xml')}\n`);
 const alt = (p) => (p.alt ? `\n<xhtml:link rel="alternate" hreflang="${p.lang === 'en' ? 'en' : 'zh-Hans'}" href="${url(p.path)}"/>\n<xhtml:link rel="alternate" hreflang="${p.lang === 'en' ? 'zh-Hans' : 'en'}" href="${url(p.alt)}"/>` : '');
 writeFileSync(join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${sitemap.map((p) => `<url><loc>${url(p.path)}</loc><lastmod>${p.date || DATE}</lastmod>${alt(p)}\n</url>`).join('\n')}\n</urlset>\n`);
 console.log(`built ${pages.length} pages, ${sitemap.length} in sitemap -> ${OUT}/`);

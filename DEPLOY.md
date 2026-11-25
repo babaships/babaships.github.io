@@ -59,6 +59,8 @@ python3 -m http.server 8080 --bind 127.0.0.1 --directory dist     # leave runnin
 SITE=https://babaships.github.io node check.mjs                         # second terminal; then stop the server
 git add -A && git commit -m "..." && git push
 ```
+The daughter's holiday planner app lives in `planner/` and is copied into the site as it is (served at `/planner/`, blocked in `robots.txt`, `noindex`, no site template). See `/Users/biliu/.kiro/crew/workspace-member-m-bot/projects/holiday-planner/setup-github-pages.md`.
+
 `check.mjs` also lints: one `<h1>`, title 60 characters or less, and a lead paragraph of 150 characters or less right after the H1.
 
 Project-path option (not recommended): `SITE_URL=https://<user>.github.io/<repo>/ node build.mjs` works, but `robots.txt` and its `Sitemap:` line are not read there. Check it by serving a folder that holds `<repo>` -> `dist` and running `BASE=/<repo> SITE=https://<user>.github.io node check.mjs`.

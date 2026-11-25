@@ -4,12 +4,17 @@
 // Lint: one <h1>; <title> <= 60 chars; the first thing after </h1> is <p class="lead"> of <= 150 chars (breadcrumb comes after it).
 const O='http://127.0.0.1:8080';const BASE=(process.env.BASE||'').replace(/\/$/,'');
 const SITE=(process.env.SITE||'').replace(/\/$/,'');const seen=new Set();const bad=[];
-const q=['/','/sitemap.xml','/robots.txt','/favicon.ico','/about/','/zh/about/','/zh/privacy/','/zh/lessons/'].map(u=>BASE+u);
+const q=['/','/sitemap.xml','/robots.txt','/favicon.ico','/about/','/zh/about/','/zh/privacy/','/zh/lessons/','/planner/','/planner/manifest.json','/planner/sw.js','/planner/icons/icon-192.png','/planner/icons/icon-512.png','/planner/icons/icon-180.png'].map(u=>BASE+u);
 const inScope=u=>u===BASE||u.startsWith(BASE+'/');
 while(q.length){const u=q.pop();if(seen.has(u))continue;seen.add(u);
  const r=await fetch(O+u);if(r.status!==200){bad.push(u+' '+r.status);continue}
+ if(u.startsWith(BASE+'/planner/')){ // her app: only check it loads, is noindex, and robots.txt blocks it. No page-template lint.
+  if(u===BASE+'/planner/'){const h=await r.text();if(!h.includes('name="robots" content="noindex'))bad.push('planner/index.html: needs noindex meta')}
+  continue}
  const t=await r.text();
  if(u.endsWith('.xml')||u.endsWith('robots.txt')){
+  if(u.endsWith('robots.txt')&&!t.includes('Disallow: '+BASE+'/planner/'))bad.push('robots.txt: missing Disallow for the planner');
+  if(u.endsWith('.xml')&&t.includes('/planner'))bad.push('sitemap lists the planner');
   if(u.endsWith('.xml')&&(!t.startsWith('<?xml')||!t.includes('</urlset>')))bad.push('xml '+u);
   if(SITE)for(const m of t.matchAll(/https?:\/\/[^\s<"]+/g))if(!m[0].startsWith(SITE+BASE+'/')&&!m[0].startsWith('http://www.sitemaps.org')&&!m[0].startsWith('http://www.w3.org'))bad.push('wrong-origin '+u+' '+m[0]);
   // every sitemap <loc> must be fetchable
